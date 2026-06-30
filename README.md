@@ -100,3 +100,30 @@ homeguard/
 Electronics & Telecommunications Engineering — Universidad del Cauca  
 Researcher @ GRIAL Wireless Networks Research Group  
 [github.com/jrparra2023](https://github.com/jrparra2023) · [LinkedIn](https://linkedin.com/in/josé-rafael-parra-dugarte)
+
+---
+
+## Roadmap
+
+### v1.0 — Core Pipeline ✅
+- [x] ARP-based device discovery with vendor lookup
+- [x] MAC whitelist (YAML) with unknown device alerting
+- [x] Per-IP bandwidth tracking via packet capture
+- [x] Flask live dashboard (devices + alerts + bandwidth)
+- [x] Persistent JSON logging
+- [x] 15 unit tests (pytest)
+
+### v1.1 — Scheduled Monitoring 🔜
+- [ ] Cron-based auto-scan every N minutes
+- [ ] Alert history with timestamps in dashboard
+- [ ] Email/desktop notification on new intrusion
+
+### v1.2 — Intelligence Layer 🔜
+- [ ] Port scan detection (Scapy SYN flood patterns)
+- [ ] Device fingerprinting (OS detection via TTL/TCP)
+- [ ] Risk scoring per device
+
+### v1.3 — Production Ready 🔜
+- [ ] Docker container for easy deployment
+- [ ] Config file (`config.yaml`) for subnet, interface, duration
+- [ ] REST API with authentication
