@@ -1,0 +1,11 @@
+# Logs (se generan en runtime)
+logs/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Virtual environment
+venv/
