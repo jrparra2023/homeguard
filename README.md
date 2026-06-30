@@ -77,6 +77,8 @@ venv/bin/python3 -m pytest tests/ -v
 ---
 
 ## Project Structure
+
+```text
 homeguard/
 ├── discovery/
 │   └── device_scanner.py      # ARP scan + vendor lookup
@@ -92,7 +94,7 @@ homeguard/
 ├── tests/
 │   └── test_homeguard.py      # 15 unit tests
 └── README.md
----
+```
 
 ## Author
 
