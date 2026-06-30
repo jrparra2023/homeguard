@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>HomeGuard Dashboard</title>
+  <meta http-equiv="refresh" content="30">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: monospace; background: #0d1117; color: #c9d1d9; padding: 20px; }
+    h1 { color: #58a6ff; margin-bottom: 6px; }
+    .subtitle { color: #8b949e; font-size: 13px; margin-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
+    .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
+    .card h2 { font-size: 14px; color: #58a6ff; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th { color: #8b949e; text-align: left; padding: 4px 8px; border-bottom: 1px solid #30363d; }
+    td { padding: 5px 8px; border-bottom: 1px solid #21262d; }
+    .ok { color: #3fb950; }
+    .alert { color: #f85149; }
+    .badge { display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 11px; }
+    .badge-ok { background: #1a3a2a; color: #3fb950; }
+    .badge-alert { background: #3a1a1a; color: #f85149; }
+    #no-alerts { color: #3fb950; font-size: 13px; padding: 8px 0; }
+  </style>
+</head>
+<body>
+  <h1>🛡 HomeGuard</h1>
+  <p class="subtitle">Red: 192.168.1.0/24 · Auto-refresh cada 30s</p>
+
+  <div class="grid">
+    <div class="card">
+      <h2>📡 Dispositivos activos</h2>
+      <table id="devices-table">
+        <thead><tr><th>IP</th><th>MAC</th><th>Vendor</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>⚠ Alertas</h2>
+      <div id="alerts-container">
+        <table id="alerts-table" style="display:none">
+          <thead><tr><th>Hora</th><th>IP</th><th>MAC</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p id="no-alerts">✓ Sin alertas activas</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📊 Ancho de banda</h2>
+      <table id="bw-table">
+        <thead><tr><th>IP</th><th>Enviado</th><th>Recibido</th><th>Total</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    function fmt(bytes) {
+      if (bytes >= 1e6) return (bytes/1e6).toFixed(2) + ' MB';
+      if (bytes >= 1e3) return (bytes/1e3).toFixed(2) + ' KB';
+      return bytes + ' B';
+    }
+
+    async function loadDevices() {
+      const r = await fetch('/api/devices');
+      const data = await r.json();
+      const tb = document.querySelector('#devices-table tbody');
+      tb.innerHTML = '';
+      data.forEach(d => {
+        tb.innerHTML += `<tr><td>${d.ip}</td><td>${d.mac}</td><td>${d.vendor||'—'}</td></tr>`;
+      });
+    }
+
+    async function loadAlerts() {
+      const r = await fetch('/api/alerts');
+      const data = await r.json();
+      const tb = document.querySelector('#alerts-table tbody');
+      tb.innerHTML = '';
+      if (data.length === 0) {
+        document.getElementById('no-alerts').style.display = 'block';
+        document.getElementById('alerts-table').style.display = 'none';
+      } else {
+        document.getElementById('no-alerts').style.display = 'none';
+        document.getElementById('alerts-table').style.display = 'table';
+        data.slice(-10).reverse().forEach(a => {
+          const t = a.timestamp.split('T')[1].substring(0,8);
+          tb.innerHTML += `<tr><td class="alert">${t}</td><td>${a.ip}</td><td>${a.mac}</td></tr>`;
+        });
+      }
+    }
+
+    async function loadBandwidth() {
+      const r = await fetch('/api/bandwidth');
+      const data = await r.json();
+      const tb = document.querySelector('#bw-table tbody');
+      tb.innerHTML = '';
+      if (!data.devices) return;
+      data.devices.forEach(d => {
+        tb.innerHTML += `<tr><td>${d.ip}</td><td>${fmt(d.sent_bytes)}</td><td>${fmt(d.received_bytes)}</td><td>${fmt(d.total_bytes)}</td></tr>`;
+      });
+    }
+
+    loadDevices(); loadAlerts(); loadBandwidth();
+  </script>
+</body>
+</html>

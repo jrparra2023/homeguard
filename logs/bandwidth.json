@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-06-30T18:10:05.263911",
+  "interface": "eth0",
+  "duration_seconds": 15,
+  "devices": [
+    {
+      "ip": "192.168.1.13",
+      "sent_bytes": 8947,
+      "received_bytes": 10876,
+      "total_bytes": 19823
+    },
+    {
+      "ip": "192.168.1.4",
+      "sent_bytes": 103,
+      "received_bytes": 0,
+      "total_bytes": 103
+    }
+  ]
+}

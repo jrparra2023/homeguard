@@ -1,0 +1,16 @@
+[
+  {
+    "timestamp": "2026-06-30T18:06:55.014639",
+    "ip": "192.168.1.7",
+    "mac": "14:b5:cd:b2:d8:4b",
+    "vendor": "Unknown",
+    "alert": "MAC no registrada en whitelist"
+  },
+  {
+    "timestamp": "2026-06-30T18:06:55.014673",
+    "ip": "192.168.1.8",
+    "mac": "f2:73:86:3a:15:5a",
+    "vendor": "Unknown",
+    "alert": "MAC no registrada en whitelist"
+  }
+]

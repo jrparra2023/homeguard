@@ -1,0 +1,41 @@
+# HomeGuard - Whitelist de dispositivos conocidos
+devices:
+  - mac: "74:93:da:ca:5a:a0"
+    ip: "192.168.1.1"
+    name: "Router principal"
+    owner: "Rafael"
+
+  - mac: "a4:fc:77:5c:a3:e5"
+    ip: "192.168.1.12"
+    name: "MegaWell device"
+    owner: "Rafael"
+
+  - mac: "1e:a5:4b:eb:83:71"
+    ip: "192.168.1.2"
+    name: "Dispositivo MAC aleatoria 1"
+    owner: "Rafael"
+
+  - mac: "f2:c1:13:a7:c8:e1"
+    ip: "192.168.1.4"
+    name: "Dispositivo MAC aleatoria 2"
+    owner: "Rafael"
+
+  - mac: "74:93:da:a0:d7:62"
+    ip: "192.168.1.48"
+    name: "Dispositivo secundario"
+    owner: "Rafael"
+
+  - mac: "10:59:32:5d:a5:90"
+    ip: "192.168.1.9"
+    name: "Roku TV"
+    owner: "Rafael"
+
+  - mac: "f2:73:86:3a:15:5a"
+    ip: "192.168.1.8"
+    name: "Dispositivo MAC aleatoria 3"
+    owner: "Rafael"
+
+  - mac: "14:b5:cd:b2:d8:4b"
+    ip: "192.168.1.7"
+    name: "Dispositivo MAC aleatoria 4"
+    owner: "Rafael"
