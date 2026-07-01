@@ -120,10 +120,10 @@ Researcher @ GRIAL Wireless Networks Research Group
 - [x] Alert history with timestamps in dashboard
 - [x] Desktop notification on new intrusion
 
-### v1.2 — Intelligence Layer 🔜
-- [ ] Port scan detection (Scapy SYN flood patterns)
-- [ ] Device fingerprinting (OS detection via TTL/TCP)
-- [ ] Risk scoring per device
+### v1.2 — Intelligence Layer ✅
+- [x] Port scan detection (Scapy SYN flood patterns)
+- [x] Device fingerprinting (OS detection via TTL/TCP)
+- [x] Risk scoring per device
 
 ### v1.3 — Production Ready 🔜
 - [ ] Docker container for easy deployment
