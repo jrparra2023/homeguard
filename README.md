@@ -125,7 +125,7 @@ Researcher @ GRIAL Wireless Networks Research Group
 - [x] Device fingerprinting (OS detection via TTL/TCP)
 - [x] Risk scoring per device
 
-### v1.3 — Production Ready 🔜
-- [ ] Docker container for easy deployment
-- [ ] Config file (`config.yaml`) for subnet, interface, duration
-- [ ] REST API with authentication
+### v1.3 — Production Ready ✅
+- [x] Docker container for easy deployment
+- [x] Config file (`config.yaml`) for subnet, interface, duration
+- [x] REST API with authentication
