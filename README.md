@@ -115,10 +115,10 @@ Researcher @ GRIAL Wireless Networks Research Group
 - [x] Persistent JSON logging
 - [x] 15 unit tests (pytest)
 
-### v1.1 — Scheduled Monitoring 🔜
-- [ ] Cron-based auto-scan every N minutes
-- [ ] Alert history with timestamps in dashboard
-- [ ] Email/desktop notification on new intrusion
+### v1.1 — Scheduled Monitoring ✅
+- [x] Cron-based auto-scan every N minutes
+- [x] Alert history with timestamps in dashboard
+- [x] Desktop notification on new intrusion
 
 ### v1.2 — Intelligence Layer 🔜
 - [ ] Port scan detection (Scapy SYN flood patterns)
