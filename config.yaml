@@ -1,0 +1,24 @@
+# HomeGuard - Configuración global
+network:
+  subnet: "192.168.1.0/24"
+  interface: "eth0"
+
+scanner:
+  timeout: 3
+
+scheduler:
+  interval_minutes: 5
+
+bandwidth:
+  duration_seconds: 15
+
+detection:
+  port_scan_threshold_ports: 10
+  port_scan_threshold_secs: 5
+
+dashboard:
+  host: "0.0.0.0"
+  port: 5000
+
+api:
+  token: "homeguard-secret-token"
