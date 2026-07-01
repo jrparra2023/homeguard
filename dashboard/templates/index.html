@@ -9,23 +9,37 @@
     body { font-family: monospace; background: #0d1117; color: #c9d1d9; padding: 20px; }
     h1 { color: #58a6ff; margin-bottom: 6px; }
     .subtitle { color: #8b949e; font-size: 13px; margin-bottom: 24px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; margin-bottom: 20px; }
     .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
+    .card.full { grid-column: 1 / -1; }
     .card h2 { font-size: 14px; color: #58a6ff; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    .card h2 .count { color: #f85149; margin-left: 8px; font-size: 12px; }
     table { width: 100%; border-collapse: collapse; font-size: 12px; }
     th { color: #8b949e; text-align: left; padding: 4px 8px; border-bottom: 1px solid #30363d; }
     td { padding: 5px 8px; border-bottom: 1px solid #21262d; }
     .ok { color: #3fb950; }
-    .alert { color: #f85149; }
-    .badge { display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 11px; }
-    .badge-ok { background: #1a3a2a; color: #3fb950; }
-    .badge-alert { background: #3a1a1a; color: #f85149; }
+    .alert-row td { color: #f85149; }
     #no-alerts { color: #3fb950; font-size: 13px; padding: 8px 0; }
+    .history-table td:first-child { color: #8b949e; font-size: 11px; }
+    .badge-alert { background: #3a1a1a; color: #f85149; padding: 1px 6px; border-radius: 4px; font-size: 11px; }
+    .stats-bar { display: flex; gap: 20px; margin-bottom: 20px; }
+    .stat { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 12px 20px; }
+    .stat .val { font-size: 24px; color: #58a6ff; font-weight: bold; }
+    .stat .val.red { color: #f85149; }
+    .stat .val.green { color: #3fb950; }
+    .stat .lbl { font-size: 11px; color: #8b949e; margin-top: 2px; }
   </style>
 </head>
 <body>
   <h1>🛡 HomeGuard</h1>
   <p class="subtitle">Red: 192.168.1.0/24 · Auto-refresh cada 30s</p>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="val green" id="stat-devices">—</div><div class="lbl">Dispositivos activos</div></div>
+    <div class="stat"><div class="val red" id="stat-alerts">—</div><div class="lbl">Total alertas</div></div>
+    <div class="stat"><div class="val" id="stat-bw">—</div><div class="lbl">Tráfico capturado (última sesión)</div></div>
+    <div class="stat"><div class="val" id="stat-last">—</div><div class="lbl">Último scan</div></div>
+  </div>
 
   <div class="grid">
     <div class="card">
@@ -37,22 +51,24 @@
     </div>
 
     <div class="card">
-      <h2>⚠ Alertas</h2>
-      <div id="alerts-container">
-        <table id="alerts-table" style="display:none">
-          <thead><tr><th>Hora</th><th>IP</th><th>MAC</th></tr></thead>
-          <tbody></tbody>
-        </table>
-        <p id="no-alerts">✓ Sin alertas activas</p>
-      </div>
-    </div>
-
-    <div class="card">
       <h2>📊 Ancho de banda</h2>
       <table id="bw-table">
         <thead><tr><th>IP</th><th>Enviado</th><th>Recibido</th><th>Total</th></tr></thead>
         <tbody></tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card full">
+      <h2>⚠ Historial de alertas <span class="count" id="alert-count"></span></h2>
+      <div id="alerts-container">
+        <table id="alerts-table" style="display:none" class="history-table">
+          <thead><tr><th>Timestamp</th><th>IP</th><th>MAC</th><th>Vendor</th><th>Motivo</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p id="no-alerts" class="ok">✓ Sin alertas registradas</p>
+      </div>
     </div>
   </div>
 
@@ -71,6 +87,10 @@
       data.forEach(d => {
         tb.innerHTML += `<tr><td>${d.ip}</td><td>${d.mac}</td><td>${d.vendor||'—'}</td></tr>`;
       });
+      document.getElementById('stat-devices').textContent = data.length;
+      if (data.length > 0) {
+        document.getElementById('stat-last').textContent = new Date().toLocaleTimeString();
+      }
     }
 
     async function loadAlerts() {
@@ -78,15 +98,25 @@
       const data = await r.json();
       const tb = document.querySelector('#alerts-table tbody');
       tb.innerHTML = '';
+      document.getElementById('stat-alerts').textContent = data.length;
+
       if (data.length === 0) {
         document.getElementById('no-alerts').style.display = 'block';
         document.getElementById('alerts-table').style.display = 'none';
+        document.getElementById('alert-count').textContent = '';
       } else {
         document.getElementById('no-alerts').style.display = 'none';
         document.getElementById('alerts-table').style.display = 'table';
-        data.slice(-10).reverse().forEach(a => {
-          const t = a.timestamp.split('T')[1].substring(0,8);
-          tb.innerHTML += `<tr><td class="alert">${t}</td><td>${a.ip}</td><td>${a.mac}</td></tr>`;
+        document.getElementById('alert-count').textContent = `(${data.length} total)`;
+        [...data].reverse().forEach(a => {
+          const ts = a.timestamp.replace('T', ' ').substring(0, 19);
+          tb.innerHTML += `<tr class="alert-row">
+            <td>${ts}</td>
+            <td>${a.ip}</td>
+            <td>${a.mac}</td>
+            <td>${a.vendor||'—'}</td>
+            <td><span class="badge-alert">${a.alert}</span></td>
+          </tr>`;
         });
       }
     }
@@ -97,9 +127,12 @@
       const tb = document.querySelector('#bw-table tbody');
       tb.innerHTML = '';
       if (!data.devices) return;
+      let total = 0;
       data.devices.forEach(d => {
+        total += d.total_bytes;
         tb.innerHTML += `<tr><td>${d.ip}</td><td>${fmt(d.sent_bytes)}</td><td>${fmt(d.received_bytes)}</td><td>${fmt(d.total_bytes)}</td></tr>`;
       });
+      document.getElementById('stat-bw').textContent = fmt(total);
     }
 
     loadDevices(); loadAlerts(); loadBandwidth();

@@ -85,6 +85,12 @@ def run_detection():
         with open(ALERTS_LOG, "w") as f:
             json.dump(existing, f, indent=2)
         print(f"[ALERTA] {len(alerts)} dispositivo(s) desconocido(s) detectado(s).")
+        try:
+            from monitor.notifier import notify_intrusion
+            for a in alerts:
+                notify_intrusion(a["ip"], a["mac"])
+        except Exception:
+            pass
         print(f"[INFO] Alertas guardadas en {ALERTS_LOG}")
     else:
         print("[HomeGuard] Red limpia. Todos los dispositivos son conocidos.")
